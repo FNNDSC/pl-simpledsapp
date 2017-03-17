@@ -8,13 +8,10 @@
 #                        dev@babyMRI.org
 #
 
-
-
-import os, sys, shutil, time
+import os, shutil, time
 
 # import the Chris app superclass
-sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
-from base import ChrisApp
+from chrisapp.base import ChrisApp
 
 
 class SimpleDSApp(ChrisApp):
