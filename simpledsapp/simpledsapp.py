@@ -39,7 +39,7 @@ class SimpleDSApp(ChrisApp):
                            dest     = 'sleepLength',
                            type     = str,
                            optional = True,
-                           help     ='prefix for file names',
+                           help     ='time to sleep before performing plugin action',
                            default  = '0')
 
     def run(self, options):
