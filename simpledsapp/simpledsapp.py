@@ -19,7 +19,7 @@ class SimpleDSApp(ChrisApp):
     Add prefix given by the --prefix option to the name of each input file.
     """
     AUTHORS         = 'FNNDSC (dev@babyMRI.org)'
-    SELFPATH        = os.path.dirname(__file__)
+    SELFPATH        = os.path.abspath(__file__)
     SELFEXEC        = os.path.basename(__file__)
     EXECSHELL       = 'python3'
     TITLE           = 'Simple chris ds app'
