@@ -8,7 +8,9 @@
 #                        dev@babyMRI.org
 #
 
-import os, shutil, time
+import os
+import shutil
+import time
 
 # import the Chris app superclass
 from chrisapp.base import ChrisApp
@@ -32,10 +34,9 @@ class SimpleDSApp(ChrisApp):
 
     def define_parameters(self):
 
-        self.add_parameter('--prefix', action='store', dest='prefix', type=str,
-                          optional=False, help='prefix for file names')
-        self.add_parameter('--sleepLength',
-                           action   = 'store',
+        self.add_argument('--prefix', dest='prefix', type=str, optional=False,
+                          help='prefix for file names')
+        self.add_argument('--sleepLength',
                            dest     = 'sleepLength',
                            type     = str,
                            optional = True,
