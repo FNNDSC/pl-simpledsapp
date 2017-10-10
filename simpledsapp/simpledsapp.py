@@ -32,8 +32,15 @@ class SimpleDSApp(ChrisApp):
     LICENSE         = 'Opensource (MIT)'
     VERSION         = '0.1'
 
-    def define_parameters(self):
+    # Fill out this with key-value output descriptive info (such as an output file path
+    # relative to the output dir) that you want to save to the output meta file when
+    # called with the --saveoutputmeta flag
+    OUTPUT_META_DICT = {}
 
+    def define_parameters(self):
+        """
+        Define the CLI arguments accepted by this plugin app.
+        """
         self.add_argument('--prefix', dest='prefix', type=str, optional=False,
                           help='prefix for file names')
         self.add_argument('--sleepLength',
@@ -44,7 +51,9 @@ class SimpleDSApp(ChrisApp):
                            default  = '0')
 
     def run(self, options):
-
+        """
+        Define the code to be run by this plugin app.
+        """
         time.sleep(int(options.sleepLength))
         print('sleeping for %s' % options.sleepLength)
         for (dirpath, dirnames, filenames) in os.walk(options.inputdir):
