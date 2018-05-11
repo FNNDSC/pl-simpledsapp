@@ -11,4 +11,4 @@ WORKDIR $APPROOT
 
 RUN pip install -r requirements.txt
 
-CMD ["simpledsapp.py", "--json"]
+CMD ["simpledsapp.py", "--help"]
