@@ -58,6 +58,18 @@ class SimpleDSApp(ChrisApp):
                            optional = True,
                            help     ='time to sleep before performing plugin action',
                            default  = '0')
+        self.add_argument('--dummyInt',
+                           dest     = 'dummyInt',
+                           type     = int,
+                           optional = True,
+                           help     ='dummy integer parameter',
+                           default  = 1)
+        self.add_argument('--dummyFloat',
+                           dest     = 'dummyFloat',
+                           type     = float,
+                           optional = True,
+                           help     ='dummy float parameter',
+                           default  = 1.1)
 
     def run(self, options):
         """
