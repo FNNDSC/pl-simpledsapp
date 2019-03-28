@@ -113,7 +113,7 @@ Assign an "input" directory to ``/incoming`` and an output directory to ``/outgo
     mkdir in out && chmod 777 out
     docker run -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing       \
             fnndsc/pl-simpledsapp simpledsapp.py                    \
-            --ignoreInputDir
+            --ignoreInputDir                                        \
             /incoming /outgoing
 
 This will simply create a file called ``timestamp.json`` in the output directory. This mode is useful to just create mock nodes in a Feed tree.
