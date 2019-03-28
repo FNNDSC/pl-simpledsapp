@@ -1,75 +1,122 @@
-##############
 pl-simpledsapp
-##############
+===========
+
+.. image:: https://badge.fury.io/py/simpledsapp.svg
+    :target: https://badge.fury.io/py/simpledsapp
+
+.. image:: https://travis-ci.org/FNNDSC/simpledsapp.svg?branch=master
+    :target: https://travis-ci.org/FNNDSC/simpledsapp
+
+.. image:: https://img.shields.io/badge/python-3.5%2B-blue.svg
+    :target: https://badge.fury.io/py/pl-simpledsapp
+
+.. contents:: Table of Contents
 
 
 Abstract
-********
+--------
 
-This simple plugin demonstrates how to run the "Data System" (DS) class of plugin in ChRIS. This DS type is used to create additional data trees rooted in a particular level of a Feed hierarchy.
+``simpledsapp`` is a simple DS plugin that copies directories file from an ``input`` to ``output``. If called with an optional ``--ignoreInputDir`` the plugin will simply write a JSON formatted timestamp to the output directory.
 
-Preconditions
-*************
+Synopsis
+--------
 
-This plugin requires an input directory, typically created by ``simplefsapp.py`` as precondition.
+.. code::
+
+    python simpledsapp.py                                           \
+        [-v <level>] [--verbosity <level>]                          \
+        [--prefix <filePrefixString>]                               \
+        [--sleepLength <sleepLength>]                               \
+        [--ignoreInputDir]                                          \
+        [--version]                                                 \
+        [--man]                                                     \
+        [--meta]                                                    \
+        <inputDir>
+        <outputDir> 
+
 
 Run
-***
+----
+
+This ``plugin`` can be run in two modes: natively as a python package or as a containerized docker image.
+
+Using PyPI
+~~~~~~~~~~
+
+To run from PyPI, simply do a 
+
+.. code:: bash
+
+    pip install simpledsapp
+
+and run with
+
+.. code:: bash
+
+    simpledsapp.py --man /tmp /tmp
+
+to get inline help. To copy from one directory to another, simply do
+
+.. code:: bash
+
+    simpledsapp.py /some/input/directory /destination/directory
+
 
 Using ``docker run``
-====================
+~~~~~~~~~~~~~~~~~~~~
+
+To run using ``docker``, be sure to assign an "input" directory to ``/incoming`` and an output directory to ``/outgoing``. *Make sure that the* ``$(pwd)/out`` *directory is world writable!*
+
+Now, prefix all calls with 
+
+.. code:: bash
+
+    docker run --rm -v $(pwd)/out:/outgoing                             \
+            fnndsc/pl-simpledsapp simpledsapp.py                        \
+
+Thus, getting inline help is:
+
+.. code:: bash
+
+    mkdir in out
+    docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
+            fnndsc/pl-simpledsapp simpledsapp.py                        \
+            --man                                                       \
+            /outgoing
+
+Examples
+--------
+
+Copy from input to output with a prefix
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Assign an "input" directory to ``/incoming`` and an output directory to ``/outgoing``
 
 .. code-block:: bash
 
-    docker run -v $(pwd)/out:/incoming -v $(pwd)/out2:/outgoing     \
+    mkdir in out
+    docker run -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing       \
             fnndsc/pl-simpledsapp simpledsapp.py                    \
             --prefix test-                                          \
             --sleepLength 0                                         \
             /incoming /outgoing
 
-The above will create a copy of each file in the container's ``/incoming`` and prefix the copy with the ``prefix`` text (in this case "test-"). The copies will be storeed in the container's ``/outgoing`` directory.
+The above will create a copy of each file in the container's ``/incoming`` and prefix the file copied with the ``prefix`` text (in this case "test-"). The copies will be stored in the container's ``/outgoing`` directory.
 
-Make sure that the host ``$(pwd)/out2`` directory is world writable!
+Simply write a timestamp to the output directory, ignoring the input completely
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Example
-=======
+Assign an "input" directory to ``/incoming`` and an output directory to ``/outgoing``
 
 .. code-block:: bash
 
-    docker run -v $(pwd)/out:/incoming -v $(pwd)/out2:/outgoing     \
+    mkdir in out
+    docker run -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing       \
             fnndsc/pl-simpledsapp simpledsapp.py                    \
-            --prefix test-                                          \
-            --sleepLength 0                                         \
+            --ignoreInputDir
             /incoming /outgoing
 
-.. code-block:: bash
-
-  $>ls -la out2
-  total 20K
-  drwxrwxrwx 2 rudolph fnndsc   12K May  8 16:41 ./
-  drwxrwxr-x 4 rudolph fnndsc  4.0K May  8 16:40 ../
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-aa-remove-unknown
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-aa-status
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-accept
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-accessdb
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-acpid
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-addgnupghome
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-addgroup
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-add-shell
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-adduser
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-alsabat-test
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-alsactl
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-alsa-info
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-anacron
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-apparmor_status
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-applygnupgdefaults
-  -rw-r--r-- 1 nobody  nogroup    0 May  8 16:41 test-aptd
-  ...
-
-
-
+This will simply create a file called ``timestamp.json`` in the output directory. This mode is useful to just create mock nodes in a Feed tree.
 
 
 
