@@ -15,8 +15,8 @@ def readme():
 
 setup(
       name             =   'simpledsapp',
-      version          =   '1.0.0',
-      description      =   'A simple/dummy ChRIS FS app', 
+      version          =   '1.0.1',
+      description      =   'A simple/dummy ChRIS DS app', 
       long_description =   readme(),
       author           =   'Rudolph Pienaar',
       author_email     =   'rudolph.pienaar@gmail.com',
