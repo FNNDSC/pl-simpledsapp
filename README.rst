@@ -82,7 +82,7 @@ Thus, getting inline help is:
     docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
             fnndsc/pl-simpledsapp simpledsapp.py                        \
             --man                                                       \
-            /outgoing
+            /incoming /outgoing
 
 Examples
 --------
