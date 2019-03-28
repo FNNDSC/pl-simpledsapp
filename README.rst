@@ -1,5 +1,5 @@
 pl-simpledsapp
-===========
+==============
 
 .. image:: https://badge.fury.io/py/simpledsapp.svg
     :target: https://badge.fury.io/py/simpledsapp

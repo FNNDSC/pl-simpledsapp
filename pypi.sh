@@ -36,5 +36,5 @@ git push origin --tags
 
 rstcheck README.rst
 python3 setup.py sdist
-twine upload dist/freesurfer_pp-${VER}.tar.gz
+twine upload dist/simpledsapp-${VER}.tar.gz
 
