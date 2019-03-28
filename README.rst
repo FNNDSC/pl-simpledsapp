@@ -78,7 +78,7 @@ Thus, getting inline help is:
 
 .. code:: bash
 
-    mkdir in out
+    mkdir in out && chmod 777 out
     docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
             fnndsc/pl-simpledsapp simpledsapp.py                        \
             --man                                                       \
@@ -94,7 +94,7 @@ Assign an "input" directory to ``/incoming`` and an output directory to ``/outgo
 
 .. code-block:: bash
 
-    mkdir in out
+    mkdir in out && chmod 777 out
     docker run -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing       \
             fnndsc/pl-simpledsapp simpledsapp.py                    \
             --prefix test-                                          \
@@ -110,7 +110,7 @@ Assign an "input" directory to ``/incoming`` and an output directory to ``/outgo
 
 .. code-block:: bash
 
-    mkdir in out
+    mkdir in out && chmod 777 out
     docker run -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing       \
             fnndsc/pl-simpledsapp simpledsapp.py                    \
             --ignoreInputDir
