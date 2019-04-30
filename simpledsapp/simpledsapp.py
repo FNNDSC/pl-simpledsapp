@@ -2,22 +2,21 @@
 #                                                            _
 # Simple ChRIS DS (Data Syntehsis) app demo
 #
-# (c) 2016 Fetal-Neonatal Neuroimaging & Developmental Science Center
+# (c) 2016-2019 Fetal-Neonatal Neuroimaging & Developmental Science Center
 #                   Boston Children's Hospital
 #
 #              http://childrenshospital.org/FNNDSC/
 #                        dev@babyMRI.org
 #
 
-import  os
-import  shutil
-import  time
-import  sys
-import  time
-import  json
+import os
+import shutil
+import time
+import json
 
 # import the Chris app superclass
 from chrisapp.base import ChrisApp
+
 
 Gstr_title = """
      _                 _          _                       
@@ -91,6 +90,7 @@ Gstr_synopsis = """
         to the output dir that is a timestamp.
 """
 
+
 class SimpleDSApp(ChrisApp):
     """
     Add prefix given by the --prefix option to the name of each input file.
@@ -105,7 +105,7 @@ class SimpleDSApp(ChrisApp):
     DESCRIPTION             = 'A simple chris ds app demo'
     DOCUMENTATION           = 'https://github.com/FNNDSC/pl-simpledsapp'
     LICENSE                 = 'Opensource (MIT)'
-    VERSION                 = '1.0.3'
+    VERSION                 = '1.0.4'
     MAX_NUMBER_OF_WORKERS   = 1     # Override with integer value
     MIN_NUMBER_OF_WORKERS   = 1     # Override with integer value
     MAX_CPU_LIMIT           = ''    # Override with millicore value as string, e.g. '2000m'
@@ -124,6 +124,7 @@ class SimpleDSApp(ChrisApp):
     def define_parameters(self):
         """
         Define the CLI arguments accepted by this plugin app.
+        Use self.add_argument to specify a new app argument.
         """
         self.add_argument('--prefix', 
                            dest         = 'prefix', 
@@ -136,7 +137,6 @@ class SimpleDSApp(ChrisApp):
                            type         = bool,
                            optional     = True,
                            help         = 'if set, ignore the input dir completely',
-                           action       = 'store_true',
                            default      = False)
         self.add_argument('--sleepLength',
                            dest         = 'sleepLength',
@@ -156,63 +156,13 @@ class SimpleDSApp(ChrisApp):
                            optional     = True,
                            help         = 'dummy float parameter',
                            default      = 1.1)
-        self.add_argument('--version',
-                            help        = 'if specified, print version number',
-                            type        = bool,
-                            dest        = 'b_version',
-                            action      = 'store_true',
-                            optional    = True,
-                            default     = False)
-        self.add_argument('--man',
-                            help        = 'if specified, print man page',
-                            type        = bool,
-                            dest        = 'b_man',
-                            action      = 'store_true',
-                            optional    = True,
-                            default     = False)
-        self.add_argument('--meta',
-                            help        = 'if specified, print plugin meta data',
-                            type        = bool,
-                            dest        = 'b_meta',
-                            action      = 'store_true',
-                            optional    = True,
-                            default     = False)
-
-    def manPage_show(self):
-        """
-        Print some quick help.
-        """
-        print(Gstr_synopsis)
-
-    def metaData_show(self):
-        """
-        Print the plugin meta data
-        """
-        l_metaData  = dir(self)
-        l_classVar  = [x for x in l_metaData if x.isupper() ]
-        for str_var in l_classVar:
-            str_val = getattr(self, str_var)
-            print("%20s: %s" % (str_var, str_val))
-
 
     def run(self, options):
         """
         Define the code to be run by this plugin app.
         """
-        if options.b_man:
-            self.manPage_show()
-            sys.exit(0)
-
-        if options.b_meta:
-            self.metaData_show()
-            sys.exit(0)
-
-        if options.b_version:
-            print('Plugin Version: %s' % SimpleDSApp.VERSION)
-            sys.exit(0)
-
         print(Gstr_title)
-        print('Version: %s' % SimpleDSApp.VERSION)
+        print('Version: %s' % self.get_version())
         print('Sleeping for %s' % options.sleepLength)
         time.sleep(int(options.sleepLength))
         if options.b_ignoreInputDir:
@@ -226,21 +176,28 @@ class SimpleDSApp(ChrisApp):
                 'second':   time.strftime('%S'),
             }
             print('Saving timestamp object')
-            print(json.dumps(d_timeStamp, indent = 4))
+            print(json.dumps(d_timeStamp, indent=4))
             with open('%s/timestamp.json' % options.outputdir, 'w') as f:
-                json.dump(d_timeStamp, f, indent = 4)
+                json.dump(d_timeStamp, f, indent=4)
         else:
             for (dirpath, dirnames, filenames) in os.walk(options.inputdir):
-                relative_path  = dirpath.replace(options.inputdir, "").strip("/")
-                output_path =  os.path.join(options.outputdir, relative_path)
+                relative_path = dirpath.replace(options.inputdir, "").strip("/")
+                output_path = os.path.join(options.outputdir, relative_path)
                 for dirname in dirnames:
                     print('Creating directory... %s' % os.path.join(output_path, dirname))
                     os.makedirs(os.path.join(output_path, dirname))
                 for name in filenames:
-                    new_name    = options.prefix + name
+                    new_name = options.prefix + name
                     str_outpath = os.path.join(output_path, new_name)
                     print('Creating new file... %s' % str_outpath)
                     shutil.copy(os.path.join(dirpath, name), str_outpath)
+
+    def show_man_page(self):
+        """
+        Print the app's man page.
+        """
+        print(Gstr_synopsis)
+
 
 # ENTRYPOINT
 if __name__ == "__main__":
