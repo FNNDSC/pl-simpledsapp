@@ -1,5 +1,7 @@
+
 import sys
 import os
+
 # Make sure we are running python3.5+
 if 10 * sys.version_info[0]  + sys.version_info[1] < 35:
     sys.exit("Sorry, only Python 3.5+ is supported.")
@@ -15,7 +17,9 @@ def readme():
 
 setup(
       name             =   'simpledsapp',
-      version          =   '1.0.4',
+      # for best practices make this version the same as the VERSION class variable
+      # defined in your main plugin app class
+      version          =   '1.0.5',
       description      =   'A simple/dummy ChRIS DS app', 
       long_description =   readme(),
       author           =   'Rudolph Pienaar',

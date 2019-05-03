@@ -13,7 +13,6 @@ import os
 import shutil
 import time
 import json
-
 # import the Chris app superclass
 from chrisapp.base import ChrisApp
 
@@ -105,7 +104,7 @@ class SimpleDSApp(ChrisApp):
     DESCRIPTION             = 'A simple chris ds app demo'
     DOCUMENTATION           = 'https://github.com/FNNDSC/pl-simpledsapp'
     LICENSE                 = 'Opensource (MIT)'
-    VERSION                 = '1.0.4'
+    VERSION                 = '1.0.5'
     MAX_NUMBER_OF_WORKERS   = 1     # Override with integer value
     MIN_NUMBER_OF_WORKERS   = 1     # Override with integer value
     MAX_CPU_LIMIT           = ''    # Override with millicore value as string, e.g. '2000m'
@@ -115,10 +114,17 @@ class SimpleDSApp(ChrisApp):
     MIN_GPU_LIMIT           = 0     # Override with the minimum number of GPUs, as an integer, for your plugin
     MAX_GPU_LIMIT           = 0     # Override with the maximum number of GPUs, as an integer, for your plugin
 
-
-    # Fill out this with key-value output descriptive info (such as an output file path
-    # relative to the output dir) that you want to save to the output meta file when
-    # called with the --saveoutputmeta flag
+    # Use this dictionary structure to provide key-value output descriptive information
+    # that may be useful for the next downstream plugin. For example:
+    #
+    # {
+    #   "finalOutputFile":  "final/file.out",
+    #   "viewer":           "genericTextViewer",
+    # }
+    #
+    # The above dictionary is saved when plugin is called with a ``--saveoutputmeta`` 
+    # flag. Note also that all file paths are relative to the system specified
+    # output directory.
     OUTPUT_META_DICT = {}
 
     def define_parameters(self):
