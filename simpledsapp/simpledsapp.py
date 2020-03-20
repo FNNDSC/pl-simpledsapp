@@ -132,7 +132,7 @@ class SimpleDSApp(ChrisApp):
         Define the CLI arguments accepted by this plugin app.
         Use self.add_argument to specify a new app argument.
         """
-        self.add_argument('--prefix', 
+        self.add_argument('-p', '--prefix', 
                            dest         = 'prefix', 
                            type         = str, 
                            optional     = True,
