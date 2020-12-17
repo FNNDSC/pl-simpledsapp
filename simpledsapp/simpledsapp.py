@@ -104,7 +104,7 @@ class SimpleDSApp(ChrisApp):
     DESCRIPTION             = 'A simple chris ds app demo'
     DOCUMENTATION           = 'https://github.com/FNNDSC/pl-simpledsapp'
     LICENSE                 = 'Opensource (MIT)'
-    VERSION                 = '1.0.7'
+    VERSION                 = '1.0.8'
     MAX_NUMBER_OF_WORKERS   = 1     # Override with integer value
     MIN_NUMBER_OF_WORKERS   = 1     # Override with integer value
     MAX_CPU_LIMIT           = ''    # Override with millicore value as string, e.g. '2000m'
