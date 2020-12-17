@@ -19,7 +19,7 @@ setup(
       name             =   'simpledsapp',
       # for best practices make this version the same as the VERSION class variable
       # defined in your main plugin app class
-      version          =   '1.0.7',
+      version          =   '1.0.8',
       description      =   'A simple/dummy ChRIS DS app', 
       long_description =   readme(),
       author           =   'Rudolph Pienaar',
