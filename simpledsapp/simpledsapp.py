@@ -1,19 +1,20 @@
-#!/usr/bin/env python                                             
-#                                                            _
-# Simple ChRIS DS (Data Syntehsis) app demo
+#!/usr/bin/env python                                            
 #
-# (c) 2016-2019 Fetal-Neonatal Neuroimaging & Developmental Science Center
+# simpledsapp ds ChRIS plugin app
+#
+# (c) 2021 Fetal-Neonatal Neuroimaging & Developmental Science Center
 #                   Boston Children's Hospital
 #
 #              http://childrenshospital.org/FNNDSC/
 #                        dev@babyMRI.org
 #
 
+
 import os
 import shutil
 import time
 import json
-# import the Chris app superclass
+
 from chrisapp.base import ChrisApp
 
 
@@ -26,93 +27,109 @@ Gstr_title = """
 |___/_|_| |_| |_| .__/|_|\___|\__,_|___/\__,_| .__/| .__/ 
                 | |                          | |   | |    
                 |_|                          |_|   |_|    
-
 """
 
 Gstr_synopsis = """
 
     NAME
 
-        simpledsapp.py
+       simpledsapp.py 
 
     SYNOPSIS
 
-        simpledsapp.py                                                  \\
-            [-v <level>] [--verbosity <level>]                          \\
-            [--prefix <filePrefixString>]                               \\
-            [--sleepLength <sleepLength>]                               \\
-            [--version]                                                 \\
-            [--man]                                                     \\
-            [--meta]                                                    \\
-            [--ignoreInputDir]                                          \\
-            <inputDir>                                                  \\
+        python simpledsapp.py                                        
+            [-h] [--help]                                               
+            [--json]                                                   
+            [--man]                                                     
+            [--meta]                                                    
+            [--savejson <DIR>]                                         
+            [-v <level>] [--verbosity <level>]                          
+            [--version]                                                
+            <inputDir>                                                  
             <outputDir> 
+            [--prefix <PREFIX>] 
+            [--ignoreInputDir]
+            [--sleepLength <SECONDS>]
+            [--dummyInt <INT>]
+            [--dummyFloat <FLOAT>]
+            
 
     BRIEF EXAMPLE
 
-        * To copy some input directory to an output directory:
+        * Bare bones execution
 
-            mkdir out
-            python simpledsapp.py   /tmp \\
-                                    out
+            docker run --rm -u $(id -u)                             \
+                -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
+                fnndsc/pl-simpledsapp simpledsapp                        \
+                /incoming /outgoing
 
     DESCRIPTION
 
-        `simpledsapp.py` basically does an explicit copy of each file in 
-        an input directory to the output directory, prefixing an optional
-        string to each filename.
+        `simpledsapp.py` ...
 
     ARGS
 
-        [--prefix <prefixString>]
-        If specified, a prefix string to append to each file copied.
-
-        [--sleepLength <sleepLength>]
-        If specified, sleep for <sleepLength> seconds before starting
-        script processing. This is to simulate a possibly long running 
-        process.
-
-        [-v <level>] [--verbosity <level>]
-        Verbosity level for app. Not used currently.
-
-        [--version]
-        If specified, print version number. 
+        [-h] [--help]
+        If specified, show help message and exit.
+        
+        [--json]
+        If specified, show json representation of app and exit.
         
         [--man]
-        If specified, print (this) man page.
+        If specified, print (this) man page and exit.
 
         [--meta]
-        If specified, print plugin meta data.
-
-        [--ignoreInputDir] 
-        If specified, ignore the input directory. Simply write a single json file
-        to the output dir that is a timestamp.
+        If specified, print plugin meta data and exit.
+        
+        [--savejson <DIR>] 
+        If specified, save json representation file to DIR and exit. 
+        
+        [-v <level>] [--verbosity <level>]
+        Verbosity level for app. Not used currently.
+        
+        [--version]
+        If specified, print version number and exit. 
+        
+        <inputDir> 
+        Input directory.
+        
+        <outputDir> 
+        Output directory.
+        
+        [--prefix <PREFIX>] 
+        If specified, append this prefix to resulting output files. 
+        
+        [--ignoreInputDir]
+        If specified, ignore the input dir completely. 
+        
+        [--sleepLength <SECONDS>]
+        If specified, time to sleep before performing plugin action. 
+        
+        [--dummyInt <INT>]
+        If specified, this is a dummy (not used) input integer parameter. 
+        
+        [--dummyFloat <FLOAT>] 
+        If specified, this is a dummy (not used) input float parameter.     
 """
 
 
 class SimpleDSApp(ChrisApp):
     """
-    Add prefix given by the --prefix option to the name of each input file.
+    A simple ChRIS ds app demo
     """
-    AUTHORS                 = 'FNNDSC (dev@babyMRI.org)'
-    SELFPATH                = os.path.dirname(os.path.abspath(__file__))
-    SELFEXEC                = os.path.basename(__file__)
-    EXECSHELL               = 'python3'
+    PACKAGE                 = __package__
     TITLE                   = 'Simple chris ds app'
-    CATEGORY                = ''
+    CATEGORY                = 'copy'
     TYPE                    = 'ds'
-    DESCRIPTION             = 'A simple chris ds app demo'
-    DOCUMENTATION           = 'https://github.com/FNNDSC/pl-simpledsapp'
-    LICENSE                 = 'Opensource (MIT)'
-    VERSION                 = '1.0.8'
-    MAX_NUMBER_OF_WORKERS   = 1     # Override with integer value
-    MIN_NUMBER_OF_WORKERS   = 1     # Override with integer value
-    MAX_CPU_LIMIT           = ''    # Override with millicore value as string, e.g. '2000m'
-    MIN_CPU_LIMIT           = ''    # Override with millicore value as string, e.g. '2000m'
-    MAX_MEMORY_LIMIT        = ''    # Override with string, e.g. '1Gi', '2000Mi'
-    MIN_MEMORY_LIMIT        = ''    # Override with string, e.g. '1Gi', '2000Mi'
-    MIN_GPU_LIMIT           = 0     # Override with the minimum number of GPUs, as an integer, for your plugin
-    MAX_GPU_LIMIT           = 0     # Override with the maximum number of GPUs, as an integer, for your plugin
+    ICON                    = '' # url of an icon image
+    MAX_NUMBER_OF_WORKERS   = 1  # Override with integer value
+    MIN_NUMBER_OF_WORKERS   = 1  # Override with integer value
+    MAX_CPU_LIMIT           = '' # Override with millicore value as string, e.g. '2000m'
+    MIN_CPU_LIMIT           = '' # Override with millicore value as string, e.g. '2000m'
+    MAX_MEMORY_LIMIT        = '' # Override with string, e.g. '1Gi', '2000Mi'
+    MIN_MEMORY_LIMIT        = '' # Override with string, e.g. '1Gi', '2000Mi'
+    MIN_GPU_LIMIT           = 0  # Override with the minimum number of GPUs, as an integer, for your plugin
+    MAX_GPU_LIMIT           = 0  # Override with the maximum number of GPUs, as an integer, for your plugin
 
     # Use this dictionary structure to provide key-value output descriptive information
     # that may be useful for the next downstream plugin. For example:
@@ -122,7 +139,7 @@ class SimpleDSApp(ChrisApp):
     #   "viewer":           "genericTextViewer",
     # }
     #
-    # The above dictionary is saved when plugin is called with a ``--saveoutputmeta`` 
+    # The above dictionary is saved when plugin is called with a ``--saveoutputmeta``
     # flag. Note also that all file paths are relative to the system specified
     # output directory.
     OUTPUT_META_DICT = {}
@@ -132,9 +149,9 @@ class SimpleDSApp(ChrisApp):
         Define the CLI arguments accepted by this plugin app.
         Use self.add_argument to specify a new app argument.
         """
-        self.add_argument('-p', '--prefix', 
-                           dest         = 'prefix', 
-                           type         = str, 
+        self.add_argument('-p', '--prefix',
+                           dest         = 'prefix',
+                           type         = str,
                            optional     = True,
                            help         = 'prefix for file names',
                            default      = '')
@@ -169,6 +186,7 @@ class SimpleDSApp(ChrisApp):
         """
         print(Gstr_title)
         print('Version: %s' % self.get_version())
+
         print('Sleeping for %s' % options.sleepLength)
         time.sleep(int(options.sleepLength))
         if options.b_ignoreInputDir:
@@ -203,9 +221,3 @@ class SimpleDSApp(ChrisApp):
         Print the app's man page.
         """
         print(Gstr_synopsis)
-
-
-# ENTRYPOINT
-if __name__ == "__main__":
-    app = SimpleDSApp()
-    app.launch()

@@ -1,14 +1,15 @@
 pl-simpledsapp
 ==============
 
-.. image:: https://badge.fury.io/py/simpledsapp.svg
-    :target: https://badge.fury.io/py/simpledsapp
+.. image:: https://img.shields.io/docker/v/fnndsc/pl-simpledsapp
+    :target: https://hub.docker.com/r/fnndsc/pl-simpledsapp
 
-.. image:: https://travis-ci.org/FNNDSC/simpledsapp.svg?branch=master
-    :target: https://travis-ci.org/FNNDSC/simpledsapp
+.. image:: https://img.shields.io/github/license/fnndsc/pl-simpledsapp
+    :target: https://github.com/FNNDSC/pl-simpledsapp/blob/master/LICENSE
 
-.. image:: https://img.shields.io/badge/python-3.5%2B-blue.svg
-    :target: https://badge.fury.io/py/pl-simpledsapp
+.. image:: https://github.com/FNNDSC/pl-simpledsapp/workflows/ci/badge.svg
+    :target: https://github.com/FNNDSC/pl-simpledsapp/actions
+
 
 .. contents:: Table of Contents
 
@@ -16,107 +17,129 @@ pl-simpledsapp
 Abstract
 --------
 
-``simpledsapp`` is a simple DS plugin that copies directories file from an ``input`` to ``output``. If called with an optional ``--ignoreInputDir`` the plugin will simply write a JSON formatted timestamp to the output directory.
+A simple ChRIS ds app demo.
 
-Synopsis
---------
+
+Description
+-----------
+
+``simpledsapp`` basically does an explicit copy of each file in an input directory to the
+output directory, prefixing an optional string to each filename.
+
+
+Usage
+-----
 
 .. code::
 
-    python simpledsapp.py                                           \
-        [-v <level>] [--verbosity <level>]                          \
-        [--prefix <filePrefixString>]                               \
-        [--sleepLength <sleepLength>]                               \
-        [--ignoreInputDir]                                          \
-        [--version]                                                 \
-        [--man]                                                     \
-        [--meta]                                                    \
-        <inputDir>
-        <outputDir> 
+        python simpledsapp.py
+            [-h] [--help]
+            [--json]
+            [--man]
+            [--meta]
+            [--savejson <DIR>]
+            [-v <level>] [--verbosity <level>]
+            [--version]
+            <inputDir>
+            <outputDir>
+            [--prefix <PREFIX>]
+            [--ignoreInputDir]
+            [--sleepLength <SECONDS>]
+            [--dummyInt <INT>]
+            [--dummyFloat <FLOAT>]
 
+
+Arguments
+~~~~~~~~~
+
+.. code::
+
+        [-h] [--help]
+        If specified, show help message and exit.
+
+        [--json]
+        If specified, show json representation of app and exit.
+
+        [--man]
+        If specified, print (this) man page and exit.
+
+        [--meta]
+        If specified, print plugin meta data and exit.
+
+        [--savejson <DIR>]
+        If specified, save json representation file to DIR and exit.
+
+        [-v <level>] [--verbosity <level>]
+        Verbosity level for app. Not used currently.
+
+        [--version]
+        If specified, print version number and exit.
+
+        <inputDir>
+        Input directory.
+
+        <outputDir>
+        Output directory.
+
+        [--prefix <PREFIX>]
+        If specified, append this prefix to resulting output files.
+
+        [--ignoreInputDir]
+        If specified, ignore the input dir completely.
+
+        [--sleepLength <SECONDS>]
+        If specified, time to sleep before performing plugin action.
+
+        [--dummyInt <INT>]
+        If specified, this is a dummy (not used) input integer parameter.
+
+        [--dummyFloat <FLOAT>]
+        If specified, this is a dummy (not used) input float parameter.
+
+
+Getting inline help is:
+
+.. code:: bash
+
+    docker run --rm fnndsc/pl-simpledsapp simpledsapp --man
 
 Run
-----
+~~~
 
-This ``plugin`` can be run in two modes: natively as a python package or as a containerized docker image.
+You need you need to specify input and output directories using the `-v` flag to `docker run`.
 
-Using PyPI
-~~~~~~~~~~
-
-To run from PyPI, simply do a 
 
 .. code:: bash
 
-    pip install simpledsapp
-
-and run with
-
-.. code:: bash
-
-    simpledsapp.py --man /tmp /tmp
-
-to get inline help. To copy from one directory to another, simply do
-
-.. code:: bash
-
-    simpledsapp.py /some/input/directory /destination/directory
+    docker run --rm -u $(id -u)                             \
+        -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
+        fnndsc/pl-simpledsapp simpledsapp                        \
+        /incoming /outgoing
 
 
-Using ``docker run``
-~~~~~~~~~~~~~~~~~~~~
+Development
+-----------
 
-To run using ``docker``, be sure to assign an "input" directory to ``/incoming`` and an output directory to ``/outgoing``. *Make sure that the* ``$(pwd)/out`` *directory is world writable!*
-
-Now, prefix all calls with 
+Build the Docker container:
 
 .. code:: bash
 
-    docker run --rm -v $(pwd)/out:/outgoing                             \
-            fnndsc/pl-simpledsapp simpledsapp.py                        \
+    docker build -t local/pl-simpledsapp .
 
-Thus, getting inline help is:
+Run unit tests:
 
 .. code:: bash
 
-    mkdir in out && chmod 777 out
-    docker run --rm -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
-            fnndsc/pl-simpledsapp simpledsapp.py                        \
-            --man                                                       \
-            /incoming /outgoing
+    docker run --rm local/pl-simpledsapp nosetests
 
 Examples
 --------
 
-Copy from input to output with a prefix
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Assign an "input" directory to ``/incoming`` and an output directory to ``/outgoing``
-
-.. code-block:: bash
-
-    mkdir in out && chmod 777 out
-    docker run -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing       \
-            fnndsc/pl-simpledsapp simpledsapp.py                    \
-            --prefix test-                                          \
-            --sleepLength 0                                         \
-            /incoming /outgoing
-
-The above will create a copy of each file in the container's ``/incoming`` and prefix the file copied with the ``prefix`` text (in this case "test-"). The copies will be stored in the container's ``/outgoing`` directory.
-
-Simply write a timestamp to the output directory, ignoring the input completely
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Assign an "input" directory to ``/incoming`` and an output directory to ``/outgoing``
-
-.. code-block:: bash
-
-    mkdir in out && chmod 777 out
-    docker run -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing       \
-            fnndsc/pl-simpledsapp simpledsapp.py                    \
-            --ignoreInputDir                                        \
-            /incoming /outgoing
-
-This will simply create a file called ``timestamp.json`` in the output directory. This mode is useful to just create mock nodes in a Feed tree.
+    docker run --rm -u $(id -u)                             \
+        -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
+        fnndsc/pl-simpledsapp simpledsapp                        \
+        /incoming /outgoing --prefix lolo
 
 
-
+.. image:: https://raw.githubusercontent.com/FNNDSC/cookiecutter-chrisapp/master/doc/assets/badge/light.png
+    :target: https://chrisstore.co

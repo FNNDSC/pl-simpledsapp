@@ -1,4 +1,4 @@
-# Docker file for the simpledsapp
+# Docker file for simpledsapp ChRIS plugin app
 #
 # Build with
 #
@@ -21,17 +21,15 @@
 #   docker run -ti -e HOST_IP=$(ip route | grep -v docker | awk '{if(NF==11) print $9}') --entrypoint /bin/bash local/pl-simpledsapp
 #
 
+FROM python:3.9.1-slim-buster
+LABEL maintainer="FNNDSC <dev@babyMRI.org>"
 
+WORKDIR /usr/local/src
 
-FROM fnndsc/ubuntu-python3:latest
-MAINTAINER fnndsc "dev@babymri.org"
-
-ENV APPROOT="/usr/src/simpledsapp" 
-COPY ["simpledsapp", "${APPROOT}"]
-COPY ["requirements.txt", "${APPROOT}"]
-
-WORKDIR $APPROOT
-
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-CMD ["simpledsapp.py", "--help"]
+COPY . .
+RUN pip install .
+
+CMD ["simpledsapp", "--help"]
