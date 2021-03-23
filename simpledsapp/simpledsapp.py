@@ -124,10 +124,10 @@ class SimpleDSApp(ChrisApp):
     ICON                    = '' # url of an icon image
     MAX_NUMBER_OF_WORKERS   = 1  # Override with integer value
     MIN_NUMBER_OF_WORKERS   = 1  # Override with integer value
-    MAX_CPU_LIMIT           = '' # Override with millicore value as string, e.g. '2000m'
-    MIN_CPU_LIMIT           = '' # Override with millicore value as string, e.g. '2000m'
-    MAX_MEMORY_LIMIT        = '' # Override with string, e.g. '1Gi', '2000Mi'
-    MIN_MEMORY_LIMIT        = '' # Override with string, e.g. '1Gi', '2000Mi'
+    MAX_CPU_LIMIT           = '4000M' # Override with millicore value as string, e.g. '2000m'
+    MIN_CPU_LIMIT           = '1000M' # Override with millicore value as string, e.g. '2000m'
+    MAX_MEMORY_LIMIT        = '4000Mi' # Override with string, e.g. '1Gi', '2000Mi'
+    MIN_MEMORY_LIMIT        = '4000Mi' # Override with string, e.g. '1Gi', '2000Mi'
     MIN_GPU_LIMIT           = 0  # Override with the minimum number of GPUs, as an integer, for your plugin
     MAX_GPU_LIMIT           = 0  # Override with the maximum number of GPUs, as an integer, for your plugin
 
