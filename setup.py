@@ -6,7 +6,7 @@ with open(path.join(path.dirname(path.abspath(__file__)), 'README.rst')) as f:
 
 setup(
     name             = 'simpledsapp',
-    version          = '2.1.0',
+    version          = '2.1.2',
     description      = 'A simple ChRIS ds app demo',
     long_description = readme,
     author           = 'FNNDSC',
