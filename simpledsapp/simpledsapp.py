@@ -14,6 +14,7 @@ import os
 import shutil
 import time
 import json
+from pflog import pflog
 
 from chrisapp.base import ChrisApp
 
@@ -179,7 +180,10 @@ class SimpleDSApp(ChrisApp):
                            optional     = True,
                            help         = 'dummy float parameter',
                            default      = 1.1)
-
+    @pflog.tel_logTime(
+            event       = 'simpledsapp',
+            log         = 'A simple ChRIS ds app demo'
+    )
     def run(self, options):
         """
         Define the code to be run by this plugin app.
