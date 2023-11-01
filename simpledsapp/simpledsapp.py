@@ -180,6 +180,12 @@ class SimpleDSApp(ChrisApp):
                            optional     = True,
                            help         = 'dummy float parameter',
                            default      = 1.1)
+        self.add_argument('--pftelDB',
+                           dest         = 'pftelDB',
+                           type         = str,
+                           optional     = True,
+                           help         = "an optional pftel telemetry logger, of form '<pftelURL>/api/v1/<object>/<collection>/<event>'",
+                           default      = '')
     @pflog.tel_logTime(
             event       = 'simpledsapp',
             log         = 'A simple ChRIS ds app demo'
