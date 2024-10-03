@@ -6,12 +6,12 @@ with open(path.join(path.dirname(path.abspath(__file__)), 'README.rst')) as f:
 
 setup(
     name             = 'simpledsapp',
-    version          = '2.1.3',
+    version          = '2.1.4',
     description      = 'A simple ChRIS ds app demo',
     long_description = readme,
     author           = 'FNNDSC',
     author_email     = 'dev@babyMRI.org',
-    url              = 'http://wiki',
+    url              = 'https://github.com/FNNDSC/pl-simpledsapp#readme',
     packages         = ['simpledsapp'],
     install_requires = ['chrisapp'],
     test_suite       = 'nose.collector',
