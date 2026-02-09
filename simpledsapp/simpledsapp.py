@@ -112,7 +112,18 @@ Gstr_synopsis = """
         [--dummyFloat <FLOAT>] 
         If specified, this is a dummy (not used) input float parameter.     
 """
+CHUNK_SIZE = 8 * 1024 * 1024  # 8 MB, safe for 512 MB pods
 
+
+def copy_file_streaming(src, dst):
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+
+    with open(src, "rb") as fsrc, open(dst, "wb") as fdst:
+        while True:
+            chunk = fsrc.read(CHUNK_SIZE)
+            if not chunk:
+                break
+            fdst.write(chunk)
 
 class SimpleDSApp(ChrisApp):
     """
@@ -224,7 +235,8 @@ class SimpleDSApp(ChrisApp):
                     new_name = options.prefix + name
                     str_outpath = os.path.join(output_path, new_name)
                     print('Creating new file... %s' % str_outpath)
-                    shutil.copy(os.path.join(dirpath, name), str_outpath)
+                    copy_file_streaming(os.path.join(dirpath, name), str_outpath)
+                    # shutil.copy(os.path.join(dirpath, name), str_outpath)
 
     def show_man_page(self):
         """
