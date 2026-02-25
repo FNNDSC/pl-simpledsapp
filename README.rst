@@ -23,8 +23,12 @@ A simple ChRIS ds app demo.
 Description
 -----------
 
-``simpledsapp`` basically does an explicit copy of each file in an input directory to the
-output directory, prefixing an optional string to each filename.
+``simpledsapp`` recursively walks an input directory, recreates the directory structure
+in the output directory, and copies each file using explicit streaming I/O (8 MiB chunks).
+It can optionally prefix each output filename.
+
+If ``--ignoreInputDir`` is set, the input directory is ignored and a ``timestamp.json``
+file is written to the output directory.
 
 
 Usage
@@ -32,7 +36,7 @@ Usage
 
 .. code::
 
-        python simpledsapp.py
+        simpledsapp
             [-h] [--help]
             [--json]
             [--man]
@@ -47,6 +51,7 @@ Usage
             [--sleepLength <SECONDS>]
             [--dummyInt <INT>]
             [--dummyFloat <FLOAT>]
+            [--pftelDB <URL>]
 
 
 Arguments
@@ -85,7 +90,8 @@ Arguments
         If specified, append this prefix to resulting output files.
 
         [--ignoreInputDir]
-        If specified, ignore the input dir completely.
+        If specified, ignore the input dir completely and write ``timestamp.json`` in the
+        output directory.
 
         [--sleepLength <SECONDS>]
         If specified, time to sleep before performing plugin action.
@@ -95,6 +101,10 @@ Arguments
 
         [--dummyFloat <FLOAT>]
         If specified, this is a dummy (not used) input float parameter.
+
+        [--pftelDB <URL>]
+        Optional pftel telemetry logger endpoint of the form
+        ``<pftelURL>/api/v1/<object>/<collection>/<event>``.
 
 
 Getting inline help is:
